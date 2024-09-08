@@ -1,0 +1,15 @@
+Items: #物品库仅提供最基础部分
+  item1:
+    material: "Iron_Ingot" #材料
+    name: "&f钢铁"
+    lore:
+    - "&f  "
+    - "&7源自万年汉铁铸造，坚韧万分"
+    - "&f"
+  item2:
+    material: "stick" #材料
+    name: "&f木棍"
+    lore:
+    - "&f  "
+    - "&7普通的木棍"
+    - "&f"

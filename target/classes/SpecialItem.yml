@@ -1,0 +1,12 @@
+SpecialItems:
+  item1:
+    material: "Diamond" #材料
+    name: "&e强化水晶&f[&c&l10&f]"
+    lore:
+      - "&f  "
+      - "&7  使用此物品，"
+      - "&7  你的装备将直接提升到 &c&l10 &7级"
+      - "&f  "
+    level: 10 #到达的等级
+    limit: #只能对强化组x使用
+    - "Example1"

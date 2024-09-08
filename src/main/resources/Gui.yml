@@ -1,0 +1,57 @@
+Gui:
+  Settings:
+    title: "&bCowReinforce &f&l| &c超级强化"
+    size: 45
+    content: # =位空气
+      - "b-------b"
+      - "a-------a"
+      - "a---x---a"
+      - "a-------a"
+      - "b-------b"
+  Item:
+    x: #x必须代表强化位置，用于检测！！！！
+      material: "anvil"
+      name: "&f&l点 击 强 化"
+      lore:
+        - ""
+        - "  &f强化目标: &a%name%"
+        - "  &f强化等级: &a%target_level% -> %target_uplevel%"
+        - "  &f强化材料: &a%need_material%"
+        - "  &f强化概率: &a%upchance%"
+        - "  &f最高等级: &c%maxlevel%"
+        - ""
+      amount: 1
+    f: #缺少关键材料，不许更改索引！
+      material: "Red_stained_glass_pane"
+      name: "&c&l缺少关键材料"
+      lore:
+        - ""
+      amount: 1
+    q: #强化失败，等级不变。索引不能更改！
+      material: "orange_stained_glass_pane"
+      name: "&6&l强化失败！"
+      lore:
+        - ""
+      amount: 1
+    o: #强化掉级 。索引不能更改！
+      material: "TNT"
+      name: "&6&l强化失败！武器受到影响！"
+      lore:
+        - ""
+      amount: 1
+    a:
+      material: "chain"
+      name: "&aCowReinforce"
+      lore:
+        - ""
+        - "&7Author: Cow"
+        - "&7Q群: 897273171"
+      amount: 1
+    b:
+      material: "lantern"
+      name: "&aCowReinforce"
+      lore:
+        - ""
+        - "&7Author: Cow"
+        - "&7Q群: 897273171"
+      amount: 1

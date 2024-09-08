@@ -1,0 +1,27 @@
+ReinForce:
+  Example1:
+    Check: #检测，满足一项即可
+      name: #名字包含
+      - "石中剑"
+      - "桃木剑"
+      lore: #lore中包含
+      - "强化组1"
+    Settings:
+      decimals: "#.00" #保留小数
+      maxlevel: 10 #最高等级
+      item: #消耗物品
+        mm: false #使用mm
+        list: #格式物品索引名(数量)
+        - "item1(5)"
+        - "item2(1)"
+      attribute: #强化属性 词条(倍率)
+      - "物理伤害(1.2)"
+      - "暴击伤害(1.1)"
+      chance: #几率
+        1-5:
+          uc: 0.8 #成功概率
+          dc: 0 #失败掉级概率
+        6-10:
+          uc: 0.5 #成功概率
+          dc: 0.3 #失败掉级概率
+

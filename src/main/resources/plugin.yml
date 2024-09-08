@@ -1,0 +1,8 @@
+name: CowReinforce
+version: '1.0-SNAPSHOT'
+main: cow.cowReinforce.CowReinforce
+api-version: '1.13'
+author: "Cow"
+commands:
+  CowReinforce:
+    aliases: [crf]

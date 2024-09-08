@@ -1,0 +1,27 @@
+Settings:
+  HelpMessage:
+  - "&fCowReinforce"
+  - "&f->  reload | 重载插件"
+  - "&f->  give <Type> <Player> <Item> <Amount> | 给予物品"
+  - "&f->  open <Player> | 打开强化界面"
+  NoItemInHandMessage:
+  - "&fCowReinforce"
+  - "&c-> 手中物品不支持强化！"
+  GetMaxLevelMessage:
+  - "&fCowReinforce"
+  - "&c-> 手中的物品已经达到最高级！"
+  RatherThanLevelMessage: #超越强化装置升级等级提示
+    - "&fCowReinforce"
+    - "&c-> 你的手持物品强化等级高于强化装置！"
+  UsedSuccessfully: #超越强化装置升级等级提示
+    message:
+    - "&fCowReinforce"
+    - "&c-> 你手中的物品得到大幅度强化！"
+    sound: "ENTITY_PLAYER_LEVELUP"
+  Material: #%need_material%
+    enough: "%material% &a× %amount% "
+    notenough: "&c%material% &c× %amount%"
+    time: 2 #缺少材料显示时间
+    Sound:
+      success: "ITEM_TOTEM_USE"
+      failure: "ENTITY_VILLAGER_HURT"
