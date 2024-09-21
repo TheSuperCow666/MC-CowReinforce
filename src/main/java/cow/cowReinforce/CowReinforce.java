@@ -10,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class CowReinforce extends JavaPlugin {
 
     private static JavaPlugin instance;
-    public static double version = 1.05;
+    public static double version = 1.06;
 
     @Override
     public void onEnable() {

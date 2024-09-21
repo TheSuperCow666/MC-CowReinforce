@@ -43,7 +43,8 @@ public class ReinforceGui {
                             .replace("%target_uplevel%", Tool.getReinforceLevel(p) + 1 + "")
                             .replace("%need_material%", Tool.getMaterialDescription(p, Tool.getItemReinforceType(p)))
                             .replace("%maxlevel%", Reinforce.getMaxlevel().get(Tool.getItemReinforceType(p)) + "")
-                            .replace("%upchance%", Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getUpchance().get(Tool.getItemReinforceType(p))) * 100 + "%"));
+                            .replace("%upchance%", Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getUpchance().get(Tool.getItemReinforceType(p))) * 100 + "%")
+                            .replace("%downchance%", Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getDownchance().get(Tool.getItemReinforceType(p))) * 100 + "%"));
                     im.setLore(lore);
                     i.setItemMeta(im);
                     inv.get(p).setItem(key, i);

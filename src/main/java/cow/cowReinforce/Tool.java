@@ -3,16 +3,13 @@ package cow.cowReinforce;
 
 import com.fileTool.Reinforce;
 import com.fileTool.SpecialItem;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,6 +68,11 @@ public class Tool {
                 Matcher ma = pa.matcher(s +  "末尾" );
                 if(ma.find()){
                     String o = ma.group().replace(att, "");
+                    Pattern pattern = Pattern.compile("§" + "(.?)");
+                    Matcher matcher = pattern.matcher(o);
+                    while(matcher.find()){
+                        o = o.replace(matcher.group(),"");
+                    }
                     double result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")) + "/" +Reinforce.getRFarttribute().get(type).get(att));
                     DecimalFormat df = new DecimalFormat(Reinforce.getDecimals().get(type));
                     String result2 = df.format(result);
@@ -101,12 +103,18 @@ public class Tool {
         im.setDisplayName(name);
         for(String s : oldi.getItemMeta().getLore()){
             String att = hasAttribute(s,type);
-            if (!att.equals("未找到")) {
+            if (!att.equals("未找到") && !s.contains(Reinforce.getIgnore().get(type)) ) {
                 Pattern pa = Pattern.compile(att +"(.*?)末尾");
                 Matcher ma = pa.matcher(s +  "末尾" );
                 if(ma.find()){
                     String o = ma.group().replace(att, "");
-                    double result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")) + "*" +Reinforce.getRFarttribute().get(type).get(att));
+                    Pattern pattern = Pattern.compile("§" + "(.?)");
+                    Matcher matcher = pattern.matcher(o);
+                    while(matcher.find()){
+                        o = o.replace(matcher.group(),"");
+                    }
+                    double result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")
+                    )+ "*" +Reinforce.getRFarttribute().get(type).get(att));
                     DecimalFormat df = new DecimalFormat(Reinforce.getDecimals().get(type));
                     String result2 = df.format(result);
                     String addlore = (s +"Finally") .replace(o.replace("末尾","").replace(":","").replace(" ", "") + "Finally", result2);
@@ -155,6 +163,11 @@ public class Tool {
                     Matcher ma = pa.matcher(s +  "末尾" );
                     if(ma.find()){
                         String o = ma.group().replace(att, "");
+                        Pattern pattern = Pattern.compile("§" + "(.?)");
+                        Matcher matcher = pattern.matcher(o);
+                        while(matcher.find()){
+                            o = o.replace(matcher.group(),"");
+                        }
                         double result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")) + "*" +multiple);
                         DecimalFormat df = new DecimalFormat(Reinforce.getDecimals().get(type));
                         String result2 = df.format(result);

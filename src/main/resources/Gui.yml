@@ -18,6 +18,7 @@ Gui:
         - "  &f强化等级: &a%target_level% -> %target_uplevel%"
         - "  &f强化材料: &a%need_material%"
         - "  &f强化概率: &a%upchance%"
+        - "  &f掉级概率: &a%downchance%"
         - "  &f最高等级: &c%maxlevel%"
         - ""
       amount: 1

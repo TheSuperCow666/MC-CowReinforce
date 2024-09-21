@@ -14,6 +14,7 @@ import java.util.List;
 public class Reinforce {
 
     private static HashMap<String,String> decimals;
+    private static HashMap<String,String> ignore;
     private static HashMap<String,Integer> maxlevel;
     private static HashMap<String,List<String>> checkname;
     private static HashMap<String,List<String>> checklore;
@@ -39,7 +40,8 @@ public class Reinforce {
         HashMap<String,List<String>> checkname = new HashMap<>();
         HashMap<String,List<String>> checklore = new HashMap<>();
         HashMap<String,Integer> maxlevel = new HashMap<>();
-        HashMap<String,String> decimals = new HashMap<>();
+        HashMap<String, String> decimals = new HashMap<>();
+        HashMap<String, String> ignore = new HashMap<>();
         HashMap<String, HashMap<ItemStack,Integer>> hii =  new HashMap<>();
         HashMap<String, HashMap<String,Double>> hsd =  new HashMap<String, HashMap<String,Double>>();
         HashMap<String, HashMap<Integer,Double>> upchance = new HashMap<>();
@@ -56,7 +58,7 @@ public class Reinforce {
             HashMap<Integer,Double> downchance2 = new HashMap<>();
             maxlevel.put(key,yaml.getInt("ReinForce." + key + ".Settings.maxlevel"));
             decimals.put(key,yaml.getString("ReinForce." + key + ".Settings.decimals"));
-
+            ignore.put(key,yaml.getString("ReinForce." + key + ".Settings.ignore"));
             for(String s : yaml.getStringList("ReinForce." + key + ".Settings.item.list")){
                 hii2.put( Item.getItem(Tool.getType(s)),(int)Tool.getNumber(s));
             }
@@ -76,6 +78,7 @@ public class Reinforce {
                     }
                 }
             }
+            setIgnore(ignore);
             setMaxlevel(maxlevel);
             upchance.put(key,upchance2);
             downchance.put(key,downchance2);
@@ -168,5 +171,13 @@ public class Reinforce {
 
     public static void setDownchance(HashMap<String, HashMap<Integer, Double>> downchance) {
         Reinforce.downchance = downchance;
+    }
+
+    public static HashMap<String, String> getIgnore() {
+        return ignore;
+    }
+
+    public static void setIgnore(HashMap<String, String> ignore) {
+        Reinforce.ignore = ignore;
     }
 }
