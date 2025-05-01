@@ -17,6 +17,7 @@ Gui:
         - "  &f强化目标: &a%name%"
         - "  &f强化等级: &a%target_level% -> %target_uplevel%"
         - "  &f强化材料: &a%need_material%"
+        - "  &f强化金币: &e%has_money%&f/&c%need_money%"
         - "  &f强化概率: &a%upchance%"
         - "  &f掉级概率: &a%downchance%"
         - "  &f最高等级: &c%maxlevel%"
@@ -25,6 +26,12 @@ Gui:
     f: #缺少关键材料，不许更改索引！
       material: "Red_stained_glass_pane"
       name: "&c&l缺少关键材料"
+      lore:
+        - ""
+      amount: 1
+    m: #缺少钱，不许更改索引！
+      material: "Red_stained_glass_pane"
+      name: "&c&l缺少金币"
       lore:
         - ""
       amount: 1

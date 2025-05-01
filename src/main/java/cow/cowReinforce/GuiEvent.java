@@ -4,7 +4,6 @@ import com.fileTool.Gui;
 import com.fileTool.Reinforce;
 import com.fileTool.SpecialItem;
 import org.bukkit.Sound;
-import org.bukkit.entity.Cow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,6 +31,17 @@ public class GuiEvent implements Listener {
                 double gl = new Random().nextDouble()*100;
                 for(int slot : Gui.getQianghua().keySet()){
                     if(slot == e.getSlot()){
+                        if(CowReinforce.econ != null && CowReinforce.econ.getBalance(p) < Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p))){
+                            e.getClickedInventory().setItem(e.getSlot(),Gui.getSymbol().get('m'));
+                            p.playSound(p.getLocation(), Sound.valueOf(CowReinforce.getinstance().getConfig().getString("Settings.Material.Sound.failure")),1,1);
+                            new BukkitRunnable(){
+                                public void run(){
+                                    e.getClickedInventory().setItem(e.getSlot(),old);
+                                    cancel();
+                                }
+                            }.runTaskLater(CowReinforce.getinstance(),CowReinforce.getinstance().getConfig().getLong("Settings.Material.time")*20);
+                            return;
+                        }
                         for(Map.Entry<ItemStack,Integer> entry : Reinforce.getNeeditem().get(Tool.getItemReinforceType(p)).entrySet()){
 
                             if(Tool.checkItem(entry.getKey(),p) < entry.getValue()){
@@ -49,8 +59,11 @@ public class GuiEvent implements Listener {
                         for(Map.Entry<ItemStack,Integer> entry : Reinforce.getNeeditem().get(Tool.getItemReinforceType(p)).entrySet()){
                             Tool.dItem(entry.getKey(),p,entry.getValue());
                         }
+                        if(CowReinforce.econ != null)CowReinforce.econ.withdrawPlayer(p,Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p)));
                         double upchance = Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getUpchance().get(Tool.getItemReinforceType(p))) * 100;
                         double downchance = Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getDownchance().get(Tool.getItemReinforceType(p))) * 100;
+
+
                         if (gl > upchance) {
                             p.playSound(p.getLocation(), Sound.valueOf(CowReinforce.getinstance().getConfig().getString("Settings.Material.Sound.failure")),1,1);
                             double dc = new Random().nextDouble()*100;
@@ -79,6 +92,7 @@ public class GuiEvent implements Listener {
                         p.playSound(p.getLocation(), Sound.valueOf(CowReinforce.getinstance().getConfig().getString("Settings.Material.Sound.success")),1,1);
                         Tool.getNextLevelItem(p,p.getInventory().getItemInMainHand(),Tool.getItemReinforceType(p));
                         p.closeInventory();
+
                         ReinforceGui.open(p);
                     }
                 }

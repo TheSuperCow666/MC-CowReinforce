@@ -9,6 +9,8 @@ ReinForce:
     Settings:
       decimals: "#.00" #保留小数
       maxlevel: 10 #最高等级
+      type: 0 #0为远古模式：强化倍率=倍率^等级 ，1为新模式，强化倍率=倍率*等级*属性
+      money: 1000 #需要Vault和经济插件，否则无效
       item: #消耗物品
         mm: false #使用mm
         list: #格式物品索引名(数量)

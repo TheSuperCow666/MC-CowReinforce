@@ -16,6 +16,8 @@ public class Reinforce {
     private static HashMap<String,String> decimals;
     private static HashMap<String,String> ignore;
     private static HashMap<String,Integer> maxlevel;
+    private static HashMap<String,Integer> reinforcetype;
+    private static HashMap<String,Double> needmoney;
     private static HashMap<String,List<String>> checkname;
     private static HashMap<String,List<String>> checklore;
     private static HashMap<String, HashMap<ItemStack,Integer>> needitem;
@@ -40,7 +42,9 @@ public class Reinforce {
         HashMap<String,List<String>> checkname = new HashMap<>();
         HashMap<String,List<String>> checklore = new HashMap<>();
         HashMap<String,Integer> maxlevel = new HashMap<>();
+        HashMap<String,Integer> reinforcetype = new HashMap<>();
         HashMap<String, String> decimals = new HashMap<>();
+        HashMap<String, Double> needmoney = new HashMap<>();
         HashMap<String, String> ignore = new HashMap<>();
         HashMap<String, HashMap<ItemStack,Integer>> hii =  new HashMap<>();
         HashMap<String, HashMap<String,Double>> hsd =  new HashMap<String, HashMap<String,Double>>();
@@ -56,9 +60,12 @@ public class Reinforce {
             HashMap<String,Double> hsd2 = new HashMap<String,Double>();
             HashMap<Integer,Double> upchance2 = new HashMap<>();
             HashMap<Integer,Double> downchance2 = new HashMap<>();
+            reinforcetype.put(key,yaml.getInt("ReinForce." + key + ".Settings.type"));
             maxlevel.put(key,yaml.getInt("ReinForce." + key + ".Settings.maxlevel"));
             decimals.put(key,yaml.getString("ReinForce." + key + ".Settings.decimals"));
             ignore.put(key,yaml.getString("ReinForce." + key + ".Settings.ignore"));
+            if(yaml.contains("ReinForce." + key + ".Settings.money"))needmoney.put(key,yaml.getDouble("ReinForce." + key + ".Settings.money"));
+            else needmoney.put(key,0.0);
             for(String s : yaml.getStringList("ReinForce." + key + ".Settings.item.list")){
                 hii2.put( Item.getItem(Tool.getType(s)),(int)Tool.getNumber(s));
             }
@@ -78,8 +85,6 @@ public class Reinforce {
                     }
                 }
             }
-            setIgnore(ignore);
-            setMaxlevel(maxlevel);
             upchance.put(key,upchance2);
             downchance.put(key,downchance2);
             hii.put(key,hii2);
@@ -89,6 +94,10 @@ public class Reinforce {
             checkname.put(key,lsn);
             checklore.put(key,lsl);
         }
+        setIgnore(ignore);
+        setMaxlevel(maxlevel);
+        setNeedmoney(needmoney);
+        Reinforce.setReinforcetype(reinforcetype);
         Reinforce.setDownchance(downchance);
         Reinforce.setDecimals(decimals);
         Reinforce.setUpchance(upchance);
@@ -111,7 +120,9 @@ public class Reinforce {
     public static HashMap<String, HashMap<ItemStack, Integer>> getNeeditem() {
         return needitem;
     }
-
+    public static HashMap<String, Double> getNeedMoney() {
+        return needmoney;
+    }
     public static void setNeeditem(HashMap<String, HashMap<ItemStack, Integer>> needitem) {
         Reinforce.needitem = needitem;
     }
@@ -179,5 +190,17 @@ public class Reinforce {
 
     public static void setIgnore(HashMap<String, String> ignore) {
         Reinforce.ignore = ignore;
+    }
+
+    public static void setNeedmoney(HashMap<String, Double> needmoney) {
+        Reinforce.needmoney = needmoney;
+    }
+
+    public static HashMap<String, Integer> getReinforcetype() {
+        return reinforcetype;
+    }
+
+    public static void setReinforcetype(HashMap<String, Integer> reinforcetype) {
+        Reinforce.reinforcetype = reinforcetype;
     }
 }

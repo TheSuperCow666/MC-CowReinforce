@@ -4,11 +4,13 @@ import com.fileTool.Gui;
 import com.fileTool.Item;
 import com.fileTool.Reinforce;
 import com.fileTool.SpecialItem;
+import de.tr7zw.nbtapi.NBT;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.List;
@@ -88,11 +90,25 @@ public class Command implements TabExecutor {
                 Tool.sendMessage(sender, "&bCowReinforce &c错误的格式");
                 Tool.sendMessage(sender, "&bCowReinforce &a->/crf give <Type> <Player> <Item> <Amount>[可选]");
             }
-        }else if (args[0].equals("test")){
+        }else if (args[0].equals("addnbt")){
             Player p = (Player)sender;
             Tool.sendMessage(sender, "&bCowReinforce &a->测试成功");
-            Tool.getLastLevelItem(p,p.getInventory().getItemInMainHand(),Tool.getItemReinforceType(p));
+            if(args.length >=3){
+                ItemMeta im = p.getInventory().getItemInMainHand().getItemMeta();
+                NBT.modify(p.getInventory().getItemInMainHand(), nbt -> {
+                    nbt.setString(args[1], args[2]);
+                });
+                p.getInventory().getItemInMainHand().setItemMeta(im);
+            }
 
+        }else if (args[0].equals("shownbt")){
+            Player p = (Player)sender;
+            Tool.sendMessage(sender, "&bCowReinforce &a->测试成功");
+            if(args.length >=2){
+                NBT.get(p.getInventory().getItemInMainHand(), nbt -> {
+                    p.sendMessage(nbt.getDouble(args[1]) + "");
+                });
+            }
         }
 
         return true;

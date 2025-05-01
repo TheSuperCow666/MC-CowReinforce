@@ -4,13 +4,16 @@ import com.fileTool.Gui;
 import com.fileTool.Item;
 import com.fileTool.Reinforce;
 import com.fileTool.SpecialItem;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CowReinforce extends JavaPlugin {
 
     private static JavaPlugin instance;
-    public static double version = 1.06;
+    public static Economy econ = null;
+    public static double version = 1.10;
 
     @Override
     public void onEnable() {
@@ -34,10 +37,23 @@ public final class CowReinforce extends JavaPlugin {
         Gui.load();
         SpecialItem.loadConfig();
         SpecialItem.load();
-    }
+        if(getServer().getPluginManager().getPlugin("NBTAPI") == null){
+            Tool.sendMessage(Bukkit.getConsoleSender(),"&c未检测到需要插件NBTAPI");
 
+        }
+        if (setupEconomy()) {
+            Tool.sendMessage(Bukkit.getConsoleSender(),"&a检测到可选前置 &eVault &a插件");
+        }
+    }
+    private boolean setupEconomy() {
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) return false;
+        econ = rsp.getProvider();
+        return econ != null;
+    }
     @Override
     public void onDisable() {
+
         Tool.sendMessage(Bukkit.getConsoleSender(),"&cCowReinforce");
         Tool.sendMessage(Bukkit.getConsoleSender(),"&c  关闭成功");
         Tool.sendMessage(Bukkit.getConsoleSender(),"&aVersion: " + version);

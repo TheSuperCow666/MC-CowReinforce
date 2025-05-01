@@ -3,6 +3,10 @@ version: '1.0-SNAPSHOT'
 main: cow.cowReinforce.CowReinforce
 api-version: '1.13'
 author: "Cow"
+softdepend:
+  - Vault
+depend:
+  - NBTAPI
 commands:
   CowReinforce:
     aliases: [crf]

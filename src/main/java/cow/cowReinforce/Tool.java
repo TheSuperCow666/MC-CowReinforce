@@ -3,6 +3,12 @@ package cow.cowReinforce;
 
 import com.fileTool.Reinforce;
 import com.fileTool.SpecialItem;
+import de.tr7zw.nbtapi.NBT;
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.nbtapi.iface.ReadableItemNBT;
+import de.tr7zw.nbtapi.iface.ReadableNBT;
+import de.tr7zw.nbtapi.plugin.NBTAPI;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -59,11 +65,13 @@ public class Tool {
         if (!name.contains("+")){
             name = name + "§f +0";
         }
-        name = name.replace("+" + Tool.getReinforceLevel(p), "+" + (Tool.getReinforceLevel(p) - 1));
+        int level = Tool.getReinforceLevel(p);
+        name = name.replace("+" + level, "+" + (level - 1));
         im.setDisplayName(name);
-        for(String s : oldi.getItemMeta().getLore()){
+        for(int i =0;i<im.getLore().size();i++){
+            String s = im.getLore().get(i);
             String att = hasAttribute(s,type);
-            if (!att.equals("未找到")) {
+            if (!att.equals("未找到") && !s.contains(Reinforce.getIgnore().get(type))) {
                 Pattern pa = Pattern.compile(att +"(.*?)末尾");
                 Matcher ma = pa.matcher(s +  "末尾" );
                 if(ma.find()){
@@ -73,7 +81,19 @@ public class Tool {
                     while(matcher.find()){
                         o = o.replace(matcher.group(),"");
                     }
-                    double result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")) + "/" +Reinforce.getRFarttribute().get(type).get(att));
+                     NBTItem nbtItem = new NBTItem(oldi);
+                     double result = nbtItem.getDouble("CowReinforce." + i + "." + (level-1));
+//                    NBT.get(oldi,nbt -> {
+//                        nbt.getDouble("CowReinforce." + );
+//                    });
+
+//                    if(Reinforce.getReinforcetype().get(type) == 1){
+//                        result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")
+//                        )+ "+" +(o.replace("%","").replace("末尾","").replace(":","")
+//                                +"*" + Reinforce.getRFarttribute().get(type).get(att)));
+//                    }else{
+//                        result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")) + "/" +Reinforce.getRFarttribute().get(type).get(att));
+//                    }
                     DecimalFormat df = new DecimalFormat(Reinforce.getDecimals().get(type));
                     String result2 = df.format(result);
                     String addlore = (s +"Finally") .replace(o.replace("末尾","").replace(":","").replace(" ", "") + "Finally", result2);
@@ -90,18 +110,23 @@ public class Tool {
         assert im != null;
         im.setLore(lore);
         oldi.setItemMeta(im);
+
         return oldi;
     }
-    public static  ItemStack getNextLevelItem(Player p ,ItemStack oldi, String type){
+    public static ItemStack getNextLevelItem(Player p ,ItemStack oldi, String type){
         ItemMeta im = oldi.getItemMeta();
         List<String> lore = new ArrayList<>();
         String name = im.getDisplayName();
         if (!name.contains("+")){
             name = name + "§f +0";
         }
-        name = name.replace("+" + Tool.getReinforceLevel(p), "+" + (Tool.getReinforceLevel(p) + 1));
+        int level = Tool.getReinforceLevel(p);
+
+        name = name.replace("+" + level, "+" + (level + 1));
         im.setDisplayName(name);
-        for(String s : oldi.getItemMeta().getLore()){
+        HashMap<String,Double> nbtsave = new HashMap<>();
+        for(int i =0;i<im.getLore().size();i++){
+            String s = im.getLore().get(i);
             String att = hasAttribute(s,type);
             if (!att.equals("未找到") && !s.contains(Reinforce.getIgnore().get(type)) ) {
                 Pattern pa = Pattern.compile(att +"(.*?)末尾");
@@ -113,9 +138,27 @@ public class Tool {
                     while(matcher.find()){
                         o = o.replace(matcher.group(),"");
                     }
-                    double result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")
-                    )+ "*" +Reinforce.getRFarttribute().get(type).get(att));
+                    final String o2 = o.replace("%","").replace("末尾","").replace(":","");
+                    final int i2 = i;
+                    double result = 0;
                     DecimalFormat df = new DecimalFormat(Reinforce.getDecimals().get(type));
+                    String tempre = df.format(Double.parseDouble(o2));
+                    nbtsave.put("CowReinforce." + i2 + "." + level,Double.parseDouble(tempre));
+                    if(Reinforce.getReinforcetype().get(type) == 1){
+                        if(level == 0){
+                            result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")
+                            )+ "+" +(o.replace("%","").replace("末尾","").replace(":","")
+                                    +"*" + Reinforce.getRFarttribute().get(type).get(att)));
+                        }else{
+                            NBTItem nbtItem = new NBTItem(oldi);
+                            double temp = nbtItem.getDouble("CowReinforce." + i + "." + 0);
+                            result =temp + temp * Reinforce.getRFarttribute().get(type).get(att)*(level+1);
+                        }
+
+                    }else{
+                        result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")
+                        )+ "*" +Reinforce.getRFarttribute().get(type).get(att));
+                    }
                     String result2 = df.format(result);
                     String addlore = (s +"Finally") .replace(o.replace("末尾","").replace(":","").replace(" ", "") + "Finally", result2);
                     if(s.contains("%")){
@@ -128,9 +171,15 @@ public class Tool {
                 lore.add(s);
             }
         }
-        assert im != null;
         im.setLore(lore);
         oldi.setItemMeta(im);
+        NBT.modify(oldi, nbt -> {
+            for(Map.Entry<String,Double> keyset : nbtsave.entrySet()){
+//                p.sendMessage("key:" + keyset.getKey());
+//                p.sendMessage("value:" + keyset.getValue());
+                nbt.setDouble(keyset.getKey(),keyset.getValue());
+            }
+        });
         return oldi;
     }
     public static boolean checkLevelItem(Player p ,ItemStack oldi,int level){
@@ -148,28 +197,48 @@ public class Tool {
         if (!name.contains("+")){
             name = name + "§f +0";
         }
-        int levels = level - Tool.getReinforceLevel(oldi);
+        int nowlevel = Tool.getReinforceLevel(oldi);
+        int levels = level - nowlevel;
+        HashMap<String,Double> nbtsave = new HashMap<>();
         if(levels <=0){
             Tool.sendListMessage(p,CowReinforce.getinstance().getConfig().getStringList("Settings.RatherThanLevelMessage"));
             return;
         }else{
             name = name.replace("+" + Tool.getReinforceLevel(oldi), "+" + level);
-            assert oldi.hasItemMeta();
-            for(String s : oldi.getItemMeta().getLore()) {
+            for(int i = 0;i<im.getLore().size();i++) {
+                String s = im.getLore().get(i);
                 String att = hasAttribute(s,type);
-                if(!att.equals("未找到")){
-                    double multiple =  Math.pow(Reinforce.getRFarttribute().get(type).get(att),levels);
+                if(!att.equals("未找到") && !s.contains(Reinforce.getIgnore().get(type))){
+
                     Pattern pa = Pattern.compile(att +"(.*?)末尾");
                     Matcher ma = pa.matcher(s +  "末尾" );
                     if(ma.find()){
+                        DecimalFormat df = new DecimalFormat(Reinforce.getDecimals().get(type));
                         String o = ma.group().replace(att, "");
                         Pattern pattern = Pattern.compile("§" + "(.?)");
                         Matcher matcher = pattern.matcher(o);
                         while(matcher.find()){
                             o = o.replace(matcher.group(),"");
                         }
-                        double result = CalculationUtils.getResult((o.replace("%","").replace("末尾","").replace(":","")) + "*" +multiple);
-                        DecimalFormat df = new DecimalFormat(Reinforce.getDecimals().get(type));
+                        double result = Double.parseDouble(o.replace("%","").replace("末尾","").replace(":",""));
+                        if(Reinforce.getReinforcetype().get(type) == 1){
+                            NBTItem nbtItem = new NBTItem(oldi);
+                            double standatt = nbtItem.getDouble("CowReinforce." + i + "." + 0);
+                            for(int x = nowlevel;x<level;x++){
+                                nbtsave.put("CowReinforce." + i + "." + x,Double.parseDouble(df.format(result)));
+                                if(x == 0){
+                                    standatt = result;
+                                    result = result + result * Reinforce.getRFarttribute().get(type).get(att);
+                                }else{
+                                    result = standatt + standatt * Reinforce.getRFarttribute().get(type).get(att)*(x+1);
+                                }
+                            }
+                        }else{
+                            for(int x = nowlevel;x<level;x++){
+                                nbtsave.put("CowReinforce." + i + "." + x,result);
+                                result = CalculationUtils.getResult(result+ "*" + Reinforce.getRFarttribute().get(type).get(att));
+                            }
+                        }
                         String result2 = df.format(result);
                         String addlore = (s +"Finally") .replace(o.replace("末尾","").replace(":","").replace(" ", "") + "Finally", result2);
                         if(s.contains("%")){
@@ -185,6 +254,13 @@ public class Tool {
             im.setDisplayName(name);
             im.setLore(lore);
             oldi.setItemMeta(im);
+            NBT.modify(oldi, nbt -> {
+                for(Map.Entry<String,Double> keyset : nbtsave.entrySet()){
+//                p.sendMessage("key:" + keyset.getKey());
+//                p.sendMessage("value:" + keyset.getValue());
+                    nbt.setDouble(keyset.getKey(),keyset.getValue());
+                }
+            });
         }
     }
     public static String hasAttribute(String s,String type){

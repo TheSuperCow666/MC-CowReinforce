@@ -36,6 +36,11 @@ public class ReinforceGui {
                     List<String> lore = Objects.requireNonNull(i.getItemMeta()).getLore();
                     ItemMeta im = i.getItemMeta();
                     assert lore != null;
+                    if(CowReinforce.econ != null){
+                        lore.replaceAll(a -> a
+                                .replace("%has_money%",""+CowReinforce.econ.getBalance(p))
+                                .replace("%need_money%",""+Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p))));
+                    }
                     lore.replaceAll(a -> a
                             .replace("%attribute%", "属性")
                             .replace("%name%", p.getInventory().getItemInMainHand().getItemMeta().getDisplayName())
