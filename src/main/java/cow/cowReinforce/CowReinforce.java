@@ -1,9 +1,6 @@
 package cow.cowReinforce;
 
-import com.fileTool.Gui;
-import com.fileTool.Item;
-import com.fileTool.Reinforce;
-import com.fileTool.SpecialItem;
+import com.fileTool.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -13,7 +10,7 @@ public final class CowReinforce extends JavaPlugin {
 
     private static JavaPlugin instance;
     public static Economy econ = null;
-    public static double version = 1.10;
+    public static double version = 1.15;
 
     @Override
     public void onEnable() {
@@ -26,7 +23,8 @@ public final class CowReinforce extends JavaPlugin {
         Tool.sendMessage(Bukkit.getConsoleSender(),"&aQ群: 897273171");
         Bukkit.getPluginCommand("CowReinforce").setExecutor(new Command());
         Bukkit.getPluginManager().registerEvents(new JoinEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new GuiEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new ReinforceGuiEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new InheritanceGuiEvent(), this);
         getinstance().saveDefaultConfig();
         getinstance().reloadConfig();
         Item.loadConfig();
@@ -35,8 +33,13 @@ public final class CowReinforce extends JavaPlugin {
         Reinforce.load();
         Gui.loadConfig();
         Gui.load();
+        Gui2.loadConfig();
+        Gui2.load();
         SpecialItem.loadConfig();
         SpecialItem.load();
+        Inheritance.loadConfig();
+        Inheritance.load();
+
         if(getServer().getPluginManager().getPlugin("NBTAPI") == null){
             Tool.sendMessage(Bukkit.getConsoleSender(),"&c未检测到需要插件NBTAPI");
 
@@ -44,6 +47,7 @@ public final class CowReinforce extends JavaPlugin {
         if (setupEconomy()) {
             Tool.sendMessage(Bukkit.getConsoleSender(),"&a检测到可选前置 &eVault &a插件");
         }
+
     }
     private boolean setupEconomy() {
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);

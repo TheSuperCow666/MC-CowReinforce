@@ -3,7 +3,7 @@ Settings:
   - "&fCowReinforce"
   - "&f->  reload | 重载插件"
   - "&f->  give <Type> <Player> <Item> <Amount> | 给予物品"
-  - "&f->  open <Player> | 打开强化界面"
+  - "&f->  open <Type> <Player> | 打开强化界面"
   NoItemInHandMessage:
   - "&fCowReinforce"
   - "&c-> 手中物品不支持强化！"
@@ -13,11 +13,36 @@ Settings:
   RatherThanLevelMessage: #超越强化装置升级等级提示
     - "&fCowReinforce"
     - "&c-> 你的手持物品强化等级高于强化装置！"
+  HasItemInGui: #关闭强化界面返还物品消息
+    message:
+      - "&fCowReinforce"
+      - "&c-> 你有物品在强化菜单中未取出，已返还"
+    sound: "ENTITY_VILLAGER_NO"
   UsedSuccessfully: #超越强化装置升级等级提示
     message:
     - "&fCowReinforce"
     - "&c-> 你手中的物品得到大幅度强化！"
     sound: "ENTITY_PLAYER_LEVELUP"
+  InheritedSuccessfully: #宝石继承成功
+    message:
+      - "&fCowReinforce"
+      - "&c-> 你的宝石已经继承了你选中的装备"
+    sound: "ENTITY_PLAYER_LEVELUP"
+  InheritanceEquipWrong: #鼠标上的宝石超过1，无法继承
+    message:
+      - "&fCowReinforce"
+      - "&c-> 你选中的装备不足以继承（等级过低）"
+    sound: "ENTITY_VILLAGER_NO"
+  IsInherited: #宝石已经被继承
+    message:
+      - "&fCowReinforce"
+      - "&c-> 你的宝石已无法承载更多能量"
+    sound: "ENTITY_VILLAGER_NO"
+  InheritanceWrong: #鼠标上的宝石超过1，无法继承
+    message:
+      - "&fCowReinforce"
+      - "&c-> 你选中的继承宝石数量过多，请拆解为1"
+    sound: "ENTITY_VILLAGER_NO"
   Material: #%need_material%
     enough: "%material% &a× %amount% "
     notenough: "&c%material% &c× %amount%"

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.fileTool.Inheritance;
 import com.fileTool.Item;
 import com.fileTool.SpecialItem;
 import org.bukkit.Bukkit;
@@ -23,8 +24,11 @@ public class Tab {
         List<String> pname = new ArrayList<>();
         List<String> li = new ArrayList<>();
         List<String> si = new ArrayList<>();
+        List<String> ini = new ArrayList<>();
+
         tabListMapOp.put("CowReinforce", Arrays.asList(new String[] { "reload", "give","open"}));
-        tabListMapOp.put("CowReinforce.give", Arrays.asList(new String[] { "Material", "Special"}));
+        tabListMapOp.put("CowReinforce.give", Arrays.asList(new String[] { "Material", "Special","Inheritance"}));
+        tabListMapOp.put("CowReinforce.open", Arrays.asList(new String[] { "Reinforce", "Inheritance"}));
         for(String s : Item.getLi().keySet()){
             if(s != null) {
                 li.add(s);
@@ -35,14 +39,22 @@ public class Tab {
                 si.add(s);
             }
         }
+        for(String s : Inheritance.getLi().keySet()){
+            if(s != null) {
+                ini.add(s);
+            }
+        }
         for(Player p : Bukkit.getOnlinePlayers()){
             pname.add(p.getName());
             tabListMapOp.put("CowReinforce.give.Material." + p.getName(), li);
             tabListMapOp.put("CowReinforce.give.Special." + p.getName(), si);
+            tabListMapOp.put("CowReinforce.give.Inheritance." + p.getName(), ini);
         }
         tabListMapOp.put("CowReinforce.give.Material", pname);
         tabListMapOp.put("CowReinforce.give.Special", pname);
-        tabListMapOp.put("CowReinforce.open", pname);
+        tabListMapOp.put("CowReinforce.give.Inheritance", pname);
+        tabListMapOp.put("CowReinforce.open.Reinforce", pname);
+        tabListMapOp.put("CowReinforce.open.Inheritance", pname);
     }
     public static List<String> getTabList(String[] args, String command, boolean ifop) {
         StringBuilder builder = new StringBuilder(command);

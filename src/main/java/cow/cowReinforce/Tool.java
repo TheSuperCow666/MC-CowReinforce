@@ -1,6 +1,7 @@
 package cow.cowReinforce;
 
 
+import com.fileTool.Inheritance;
 import com.fileTool.Reinforce;
 import com.fileTool.SpecialItem;
 import de.tr7zw.nbtapi.NBT;
@@ -11,7 +12,9 @@ import de.tr7zw.nbtapi.iface.ReadableNBT;
 import de.tr7zw.nbtapi.plugin.NBTAPI;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -200,16 +203,16 @@ public class Tool {
         int nowlevel = Tool.getReinforceLevel(oldi);
         int levels = level - nowlevel;
         HashMap<String,Double> nbtsave = new HashMap<>();
-        if(levels <=0){
+        if(levels <=0 && level != 0){
             Tool.sendListMessage(p,CowReinforce.getinstance().getConfig().getStringList("Settings.RatherThanLevelMessage"));
             return;
         }else{
             name = name.replace("+" + Tool.getReinforceLevel(oldi), "+" + level);
             for(int i = 0;i<im.getLore().size();i++) {
+
                 String s = im.getLore().get(i);
                 String att = hasAttribute(s,type);
                 if(!att.equals("未找到") && !s.contains(Reinforce.getIgnore().get(type))){
-
                     Pattern pa = Pattern.compile(att +"(.*?)末尾");
                     Matcher ma = pa.matcher(s +  "末尾" );
                     if(ma.find()){
@@ -224,19 +227,29 @@ public class Tool {
                         if(Reinforce.getReinforcetype().get(type) == 1){
                             NBTItem nbtItem = new NBTItem(oldi);
                             double standatt = nbtItem.getDouble("CowReinforce." + i + "." + 0);
-                            for(int x = nowlevel;x<level;x++){
-                                nbtsave.put("CowReinforce." + i + "." + x,Double.parseDouble(df.format(result)));
-                                if(x == 0){
-                                    standatt = result;
-                                    result = result + result * Reinforce.getRFarttribute().get(type).get(att);
-                                }else{
-                                    result = standatt + standatt * Reinforce.getRFarttribute().get(type).get(att)*(x+1);
+                            if(level == 0 ) {
+                                result = standatt;
+                            }else{
+                                for(int x = nowlevel;x<level;x++){
+                                    nbtsave.put("CowReinforce." + i + "." + x,Double.parseDouble(df.format(result)));
+                                    if(x == 0){
+                                        standatt = result;
+                                        result = result + result * Reinforce.getRFarttribute().get(type).get(att);
+                                    }else{
+                                        result = standatt + standatt * Reinforce.getRFarttribute().get(type).get(att)*(x+1);
+                                    }
                                 }
                             }
                         }else{
-                            for(int x = nowlevel;x<level;x++){
-                                nbtsave.put("CowReinforce." + i + "." + x,result);
-                                result = CalculationUtils.getResult(result+ "*" + Reinforce.getRFarttribute().get(type).get(att));
+                            if(level == 0 ) {
+                                NBTItem nbtItem = new NBTItem(oldi);
+                                double standatt = nbtItem.getDouble("CowReinforce." + i + "." + 0);
+                                result = standatt;
+                            }else{
+                                for(int x = nowlevel;x<level;x++){
+                                    nbtsave.put("CowReinforce." + i + "." + x,result);
+                                    result = CalculationUtils.getResult(result+ "*" + Reinforce.getRFarttribute().get(type).get(att));
+                                }
                             }
                         }
                         String result2 = df.format(result);
@@ -354,6 +367,35 @@ public class Tool {
         }
         return "未找到";
     }
+    public static String  getItemReinforceType(Player p,ItemStack i){
+        if(i == null){
+            return "未找到";
+        }
+        if(i.hasItemMeta()){
+            if(i.getItemMeta().hasDisplayName()) {
+                for (Map.Entry<String, List<String>> entry : Reinforce.getCheckname().entrySet()) {
+                    for (String name : entry.getValue()) {
+                        if (i.getItemMeta().getDisplayName().contains(name)) {
+                            return entry.getKey();
+                        }
+                    }
+                }
+            }
+            if (i.getItemMeta().hasLore()) {
+                for (Map.Entry<String, List<String>> entry : Reinforce.getChecklore().entrySet()) {
+                    for (String lore : entry.getValue()) {
+                        for (String ilore : i.getItemMeta().getLore()) {
+                            if (ilore.contains(lore)) {
+                                return entry.getKey();
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        return "未找到";
+    }
     public static void dItem(ItemStack i, Player p, int total) {
         for (int o = 0; o < p.getInventory().getSize(); o++) {
             if (total <= 0)
@@ -436,11 +478,66 @@ public class Tool {
     public static String getReinforceGroup(Player p ,ItemStack si,int slot){
         String group = getSpecialGroup(p,si);
         String igroup = getItemReinforceType(p,slot);
+        if(group.equals("未找到")) return "未找到";
         for(String limit : SpecialItem.getLimit().get(group)){
             if(igroup.equals(limit)){
                 return igroup;
             }
         }
         return "未找到";
+    }
+    //Inheritance
+    public static String getInheritanceGroup(Player p ,ItemStack checki){
+        for(Map.Entry<String,ItemStack> entry: Inheritance.getLi().entrySet()){
+            if(checki.getItemMeta().getDisplayName().equals(entry.getValue().getItemMeta().getDisplayName())
+                    && checki.getItemMeta().getLore().containsAll(entry.getValue().getItemMeta().getLore())){
+                return entry.getKey();
+            }
+        }
+        return "未找到";
+    }
+    public static String getInheritanceGroup(Player p ,ItemStack si,int slot){
+        String group = getInheritanceGroup(p,si);
+        String igroup = getItemReinforceType(p,slot);
+        if(group.equals("未找到")) return "未找到";
+        for(String limit : Inheritance.getLimit().get(group)){
+            if(igroup.equals(limit)){
+                return igroup;
+            }
+        }
+        return "未找到";
+    }
+    public static String getInheritanceGroup(Player p ,ItemStack si,ItemStack equipi){
+        String group = getInheritanceGroup(p,si);
+        String igroup = getItemReinforceType(p,equipi);
+        if(group.equals("未找到")) return "未找到";
+        for(String limit : Inheritance.getLimit().get(group)){
+            if(igroup.equals(limit)){
+                return igroup;
+            }
+        }
+        return "未找到";
+    }
+    public static void addInheritanceLore(InventoryClickEvent e, Player p, ItemStack i, int level, String group){
+        ItemMeta im = i.getItemMeta();
+        List<String> lore = im.getLore();
+        for(String s : Inheritance.getAddlore().get(group)){
+          lore.add(s.replace("%Inheritance_level%",level+"").replace("&","§"));
+        }
+        im.setLore(lore);
+        im.addEnchant(Enchantment.DURABILITY, 1, Inheritance.getEnchant().get(group));
+        i.setItemMeta(im);
+
+        NBT.modify(i, nbt -> {
+            nbt.setInteger("CowReinforce.Inheritance.level",level);
+        });
+        e.setCursor(i);
+        return;
+    }
+    public static int getInheritanceLevel(Player p,ItemStack i){
+        if(i == null) return 0;
+        NBTItem nbtItem = new NBTItem(i);
+        int level = nbtItem.getInteger("CowReinforce.Inheritance.level");
+        return level;
     }
 }

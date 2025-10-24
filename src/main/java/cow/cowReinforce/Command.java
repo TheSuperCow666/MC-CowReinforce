@@ -1,9 +1,6 @@
 package cow.cowReinforce;
 
-import com.fileTool.Gui;
-import com.fileTool.Item;
-import com.fileTool.Reinforce;
-import com.fileTool.SpecialItem;
+import com.fileTool.*;
 import de.tr7zw.nbtapi.NBT;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -33,26 +30,45 @@ public class Command implements TabExecutor {
             Reinforce.load();
             Gui.loadConfig();
             Gui.load();
+            Gui2.loadConfig();
+            Gui2.load();
             Tab.loadTabConfig();
             SpecialItem.loadConfig();
             SpecialItem.load();
+            Inheritance.loadConfig();
+            Inheritance.load();
             for(Player p : Bukkit.getOnlinePlayers()){
                 ReinforceGui.loadReinforceGui(p);
+                InheritanceGui.loadInherianceGui(p);
             }
         } else if (args[0].equals("open")){
             try {
-                if (args.length == 2) {
-                    ReinforceGui.open(Objects.requireNonNull(Bukkit.getPlayer(args[1])));
-                } else if (args.length == 1) {
-                    ReinforceGui.open((Player) sender);
+                if (args.length == 3) {
+                    if(args[1].equals("Reinforce")){
+                        ReinforceGui.open(Objects.requireNonNull(Bukkit.getPlayer(args[2])));
+                    }else if(args[1].equals("Inheritance")){
+                        InheritanceGui.open(Objects.requireNonNull(Bukkit.getPlayer(args[2])));
+                    }else{
+                        Tool.sendMessage(sender, "&bCowReinforce &c错误的格式");
+                        Tool.sendMessage(sender, "&bCowReinforce &a->/crf open <Type> <Player>[可选]");
+                    }
+                } else if (args.length == 2) {
+                    if(args[1].equals("Reinforce")){
+                        ReinforceGui.open((Player) sender);
+                    }else if(args[1].equals("Inheritance")){
+                        InheritanceGui.open((Player)sender);
+                    }else{
+                        Tool.sendMessage(sender, "&bCowReinforce &c错误的格式");
+                        Tool.sendMessage(sender, "&bCowReinforce &a->/crf open <Type> <Player>[可选]");
+                    }
                 } else {
                     Tool.sendMessage(sender, "&bCowReinforce &c错误的格式");
-                    Tool.sendMessage(sender, "&bCowReinforce &a->/crf open <Player>[可选]");
+                    Tool.sendMessage(sender, "&bCowReinforce &a->/crf open <Type> <Player>[可选]");
                 }
             }catch (Exception ex){
                 ex.printStackTrace();
                 Tool.sendMessage(sender, "&bCowReinforce &c错误的格式");
-                Tool.sendMessage(sender, "&bCowReinforce &a->/crf open <Player>[可选]");
+                Tool.sendMessage(sender, "&bCowReinforce &a->/crf open <Type> <Player>[可选]");
             }
         }else if (args[0].equals("give")) {
             try {
@@ -64,6 +80,9 @@ public class Command implements TabExecutor {
                         i = Item.getItem(args[3]);
                     }else if(args[1].equals("Special")){
                         i = SpecialItem.getItem(args[3]);
+                    }else if(args[1].equals("Inheritance")){
+
+                        i = Inheritance.getLi().get(args[3]);
                     }
                     assert i != null;
                     i.setAmount(Integer.parseInt(args[4]));
@@ -78,6 +97,8 @@ public class Command implements TabExecutor {
                         i = Item.getItem(args[3]);
                     }else if(args[1].equals("Special")){
                         i = SpecialItem.getItem(args[3]);
+                    }else if(args[1].equals("Inheritance")){
+                        i = Inheritance.getLi().get(args[3]);
                     }
                     assert i != null;
                     p.getInventory().addItem(i);
@@ -106,7 +127,7 @@ public class Command implements TabExecutor {
             Tool.sendMessage(sender, "&bCowReinforce &a->测试成功");
             if(args.length >=2){
                 NBT.get(p.getInventory().getItemInMainHand(), nbt -> {
-                    p.sendMessage(nbt.getDouble(args[1]) + "");
+                    p.sendMessage(nbt.getInteger(args[1]) + "");
                 });
             }
         }
