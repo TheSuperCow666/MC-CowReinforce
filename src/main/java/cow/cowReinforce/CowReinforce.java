@@ -10,7 +10,7 @@ public final class CowReinforce extends JavaPlugin {
 
     private static JavaPlugin instance;
     public static Economy econ = null;
-    public static double version = 1.15;
+    public static double version = 1.16;
 
     @Override
     public void onEnable() {

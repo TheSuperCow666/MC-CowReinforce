@@ -91,20 +91,21 @@ public class ReinforceGui implements InventoryHolder {
                     List<String> lore = Objects.requireNonNull(i.getItemMeta()).getLore();
                     ItemMeta im = i.getItemMeta();
                     assert lore != null;
+                    int temp_level = Tool.getReinforceLevel(p);
                     if(CowReinforce.econ != null){
                         lore.replaceAll(a -> a
                                 .replace("%has_money%",""+CowReinforce.econ.getBalance(p))
-                                .replace("%need_money%",""+Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p))));
+                                .replace("%need_money%",""+Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p)).get(temp_level+1)));
                     }
                     lore.replaceAll(a -> a
                             .replace("%attribute%", "属性")
                             .replace("%name%", p.getInventory().getItemInMainHand().getItemMeta().getDisplayName())
-                            .replace("%target_level%", Tool.getReinforceLevel(p) + "")
-                            .replace("%target_uplevel%", Tool.getReinforceLevel(p) + 1 + "")
+                            .replace("%target_level%", temp_level + "")
+                            .replace("%target_uplevel%", temp_level + 1 + "")
                             .replace("%need_material%", Tool.getMaterialDescription(p, Tool.getItemReinforceType(p)))
                             .replace("%maxlevel%", Reinforce.getMaxlevel().get(Tool.getItemReinforceType(p)) + "")
-                            .replace("%upchance%", Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getUpchance().get(Tool.getItemReinforceType(p))) * 100 + "%")
-                            .replace("%downchance%", Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getDownchance().get(Tool.getItemReinforceType(p))) * 100 + "%"));
+                            .replace("%upchance%", Tool.getchance(temp_level + 1, Reinforce.getUpchance().get(Tool.getItemReinforceType(p))) * 100 + "%")
+                            .replace("%downchance%", Tool.getchance(temp_level + 1, Reinforce.getDownchance().get(Tool.getItemReinforceType(p))) * 100 + "%"));
                     im.setLore(lore);
                     i.setItemMeta(im);
                     inv.get(p).setItem(key, i);

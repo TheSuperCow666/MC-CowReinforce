@@ -13,6 +13,6 @@ Inheritance:
     enchant: true #继承后获得附魔
     addlore: #继承后物品追加lore
       - ""
-      - "&f 金石继承等级： &%Inheritance_level%"
+      - "&f 金石继承等级： &a%Inheritance_level%"
     limit: #只能对强化组x使用
       - "Example1"

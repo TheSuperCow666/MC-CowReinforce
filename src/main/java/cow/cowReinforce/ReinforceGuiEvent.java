@@ -33,9 +33,10 @@ public class ReinforceGuiEvent implements Listener {
             }
         }
         e.setCancelled(true);
+        int temp_level = Tool.getReinforceLevel(p);
         for(int slot : Gui.getQianghua().keySet()){
             if(slot == e.getSlot()){
-                if(CowReinforce.econ != null && CowReinforce.econ.getBalance(p) < Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p))){
+                if(CowReinforce.econ != null && CowReinforce.econ.getBalance(p) < Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p)).get(temp_level+1)){
                     e.getClickedInventory().setItem(e.getSlot(),Gui.getSymbol().get('m'));
                     p.playSound(p.getLocation(), Sound.valueOf(CowReinforce.getinstance().getConfig().getString("Settings.Material.Sound.failure")),1,1);
                     new BukkitRunnable(){
@@ -63,7 +64,7 @@ public class ReinforceGuiEvent implements Listener {
                 for(Map.Entry<ItemStack,Integer> entry : Reinforce.getNeeditem().get(Tool.getItemReinforceType(p)).entrySet()){
                     Tool.dItem(entry.getKey(),p,entry.getValue());
                 }
-                if(CowReinforce.econ != null)CowReinforce.econ.withdrawPlayer(p,Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p)));
+                if(CowReinforce.econ != null)CowReinforce.econ.withdrawPlayer(p,Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p)).get(temp_level+1));
                 double upchance = Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getUpchance().get(Tool.getItemReinforceType(p))) * 100;
                 double downchance = Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getDownchance().get(Tool.getItemReinforceType(p))) * 100;
 
