@@ -6,8 +6,9 @@ ReinForce:
       - "桃木剑"
       lore: #lore中包含
       - "强化组1"
+      lucky_stone: "强化概率" #幸运符检测文字，然后在后面加自身概率
     Settings:
-      decimals: "#.00" #保留小数
+      decimals: "0.00" #保留小数
       maxlevel: 10 #最高等级
       type: 0 #0为远古模式：强化倍率=倍率^等级 ，1为新模式，强化倍率=倍率*等级*属性
       item: #消耗物品

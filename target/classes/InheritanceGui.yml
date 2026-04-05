@@ -1,0 +1,43 @@
+Gui:
+  Settings:
+    title: "&bCowReinforce &f&l| &c继承系统"
+    size: 9
+    content: # =位空气 c达标检测继承石位置[只允许一个]
+      - "aaaacaaax"
+  Item:
+    x: #x代表确认继承按钮，不允许更改索引！
+      material: "anvil"
+      name: "&f&l点 击 继 承"
+      lore:
+        - ""
+        - "  &f强化目标: &a%name%"
+        - ""
+      amount: 1
+    f: #缺少关键材料，不许更改索引！
+      material: "Red_stained_glass_pane"
+      name: "&c&l缺少继承石"
+      lore:
+        - ""
+      amount: 1
+    m: #不在继承石的强化组范围内，不许更改索引！
+      material: "Red_stained_glass_pane"
+      name: "&c&l继承石与装备不匹配！"
+      lore:
+        - ""
+      amount: 1
+    r: #强化等级超出承载石头，不许更改索引！
+      material: "Red_stained_glass_pane"
+      name: "&c&l继承石等级<=装备等级"
+      lore:
+        - ""
+      amount: 1
+    a:
+      material: "chain"
+      name: "&aCowReinforce"
+      lore:
+        - ""
+        - "请在空位放入继承石"
+        - ""
+        - "&7Author: Cow"
+        - "&7Q群: 897273171"
+      amount: 1

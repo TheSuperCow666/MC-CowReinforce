@@ -10,7 +10,7 @@ public final class CowReinforce extends JavaPlugin {
 
     private static JavaPlugin instance;
     public static Economy econ = null;
-    public static double version = 1.16;
+    public static double version = 1.17;
 
     @Override
     public void onEnable() {
@@ -39,7 +39,8 @@ public final class CowReinforce extends JavaPlugin {
         SpecialItem.load();
         Inheritance.loadConfig();
         Inheritance.load();
-
+        ReinforceProps.loadConfig();
+        ReinforceProps.load();
         if(getServer().getPluginManager().getPlugin("NBTAPI") == null){
             Tool.sendMessage(Bukkit.getConsoleSender(),"&c未检测到需要插件NBTAPI");
 

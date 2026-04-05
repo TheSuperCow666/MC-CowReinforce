@@ -1,0 +1,25 @@
+ReinforceProps:
+  qiangbao1:
+    material: "Diamond" #材料
+    type: 0 #0表示保护石，1表示幸运符
+    name: "&e强化保护石"
+    lore:
+      - "&f  "
+      - "&7  使用此物品，"
+      - "&7  你的装备在掉级时将&c取消掉级"
+      - "&f  "
+    limit: #只能对强化组x使用
+    - "Example1"
+  xingyunfu1:
+    material: "raw_gold" #材料
+    type: 1 #0表示保护石，1表示幸运符
+    name: "&e幸运符&7[I&7]"
+    upchance: 5
+    lore:
+      - "&f  "
+      - "&7  使用此物品，"
+      - "&7  你的装备在强化时"
+      - "&f  将&a提升&e5%&a成功率"
+      - "&f"
+    limit: #只能对强化组x使用
+      - "Example1"

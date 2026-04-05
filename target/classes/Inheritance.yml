@@ -1,0 +1,18 @@
+Inheritance:
+  item1:
+    material: "Emerald" #材料
+    name: "&e继承金石"
+    lore:
+      - "&f  "
+      - "&7  将此物品拖拽入需要吞噬的强化物品"
+      - "&7  你将获得，继承其&a%Inheritance_prop%%&7的强化等级"
+      - "&f  "
+      - "&c  金石承载能力: &e&l%Inheritance_maxlevel%"
+    maxlevel: 10 #最高到达等级
+    prop: 70 #继承等级比例%
+    enchant: true #继承后获得附魔
+    addlore: #继承后物品追加lore
+      - ""
+      - "&f 金石继承等级： &a%Inheritance_level%"
+    limit: #只能对强化组x使用
+      - "Example1"

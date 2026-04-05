@@ -3,11 +3,11 @@ Gui:
     title: "&bCowReinforce &f&l| &c超级强化"
     size: 45
     content: # =位空气
-      - "b-------b"
+      - "b---n---b"
       - "a-------a"
       - "a---x---a"
       - "a-------a"
-      - "b-------b"
+      - "b---l---b"
   Item:
     x: #x必须代表强化位置，用于检测！！！！
       material: "anvil"
@@ -33,6 +33,47 @@ Gui:
       material: "Red_stained_glass_pane"
       name: "&c&l缺少金币"
       lore:
+        - ""
+      amount: 1
+    l: #不允许更改，表示幸运符位置
+      material: "Red_stained_glass_pane"
+      name: "&f&l强化幸运符"
+      lore:
+        - ""
+        - "  &f清在此位置放入强化幸运符"
+        - ""
+      amount: 1
+    L: #不允许更改，强化幸运符错误显示
+      material: "Red_stained_glass_pane"
+      name: "&f&l强化幸运符"
+      lore:
+        - ""
+        - "  &f你的强化幸运符错误，无法强化！"
+        - ""
+      amount: 1
+    n: #不允许更改，表示羌胡保护石位置
+      material: "Red_stained_glass_pane"
+      name: "&f&l强化保护石"
+      lore:
+        - ""
+        - "  &f清在此位置放入强化保护石"
+        - ""
+      amount: 1
+    N: #不允许更改，强化保护石错误显示
+      material: "Red_stained_glass_pane"
+      name: "&f&l强化保护石"
+      lore:
+        - ""
+        - "  &f你的强化保护石错误，无法强化！"
+        - ""
+      amount: 1
+    W: #不允许更改，保护使用成功
+      material: "Green_stained_glass_pane"
+      name: "&f&l强化保护石"
+      lore:
+        - ""
+        - "  &f强化保护石使用成功！"
+        - "  &f你的装备避免被&c扣除等级!"
         - ""
       amount: 1
     q: #强化失败，等级不变。索引不能更改！

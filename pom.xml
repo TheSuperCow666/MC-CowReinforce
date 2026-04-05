@@ -65,6 +65,11 @@
             <url>https://repo.codemc.io/repository/maven-public/</url>
             <layout>default</layout>
         </repository>
+        <!-- Vault 官方仓库 -->
+        <repository>
+            <id>vault-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -78,6 +83,13 @@
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api-plugin</artifactId>
             <version>2.15.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Vault API 依赖（核心） -->
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>Vault</artifactId>
+            <version>1.7.3-b131</version> <!-- 兼容 1.8-1.20+，推荐用 1.7 版本 -->
             <scope>provided</scope>
         </dependency>
     </dependencies>

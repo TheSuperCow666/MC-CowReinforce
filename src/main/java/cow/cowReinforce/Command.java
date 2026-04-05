@@ -37,6 +37,8 @@ public class Command implements TabExecutor {
             SpecialItem.load();
             Inheritance.loadConfig();
             Inheritance.load();
+            ReinforceProps.loadConfig();
+            ReinforceProps.load();
             for(Player p : Bukkit.getOnlinePlayers()){
                 ReinforceGui.loadReinforceGui(p);
                 InheritanceGui.loadInherianceGui(p);
@@ -83,6 +85,9 @@ public class Command implements TabExecutor {
                     }else if(args[1].equals("Inheritance")){
 
                         i = Inheritance.getLi().get(args[3]);
+                    }else if(args[1].equals("ReinforceProps")){
+
+                        i = ReinforceProps.getLi().get(args[3]);
                     }
                     assert i != null;
                     i.setAmount(Integer.parseInt(args[4]));
@@ -99,6 +104,8 @@ public class Command implements TabExecutor {
                         i = SpecialItem.getItem(args[3]);
                     }else if(args[1].equals("Inheritance")){
                         i = Inheritance.getLi().get(args[3]);
+                    }else if(args[1].equals("ReinforceProps")){
+                        i = ReinforceProps.getLi().get(args[3]);
                     }
                     assert i != null;
                     p.getInventory().addItem(i);

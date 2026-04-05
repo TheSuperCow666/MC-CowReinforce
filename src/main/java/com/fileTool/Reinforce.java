@@ -25,6 +25,7 @@ public class Reinforce {
     private static HashMap<String, HashMap<Integer,Double>> upchance;
     private static HashMap<String, HashMap<Integer,Double>> downchance;
 
+    private static HashMap<String,String> luckstone_check;
 
     private static YamlConfiguration yaml;
 
@@ -50,11 +51,13 @@ public class Reinforce {
         HashMap<String, HashMap<String,Double>> hsd =  new HashMap<String, HashMap<String,Double>>();
         HashMap<String, HashMap<Integer,Double>> upchance = new HashMap<>();
         HashMap<String, HashMap<Integer,Double>> downchance = new HashMap<>();
+        HashMap<String, String> luckstone_check = new HashMap<>();
         for(String key : section.getKeys(false)){
             ConfigurationSection chancesection = yaml.getConfigurationSection("ReinForce." + key + ".Settings.chance");
             //分类 1
             List<String> lsn =  yaml.getStringList("ReinForce." + key + ".Check.name");
             List<String> lsl =  yaml.getStringList("ReinForce." + key + ".Check.lore");
+            luckstone_check.put(key,yaml.getString("ReinForce." + key + ".Check.lucky_stone"));
             // 分类2
             HashMap<ItemStack,Integer> hii2 = new HashMap<ItemStack,Integer>();
             HashMap<String,Double> hsd2 = new HashMap<String,Double>();
@@ -95,6 +98,7 @@ public class Reinforce {
             checkname.put(key,lsn);
             checklore.put(key,lsl);
         }
+        setLuckstone_check(luckstone_check);
         setIgnore(ignore);
         setMaxlevel(maxlevel);
         setNeedmoney(needmoney);
@@ -203,5 +207,13 @@ public class Reinforce {
 
     public static void setReinforcetype(HashMap<String, Integer> reinforcetype) {
         Reinforce.reinforcetype = reinforcetype;
+    }
+
+    public static HashMap<String, String> getLuckstone_check() {
+        return luckstone_check;
+    }
+
+    public static void setLuckstone_check(HashMap<String, String> luckstone_check) {
+        Reinforce.luckstone_check = luckstone_check;
     }
 }

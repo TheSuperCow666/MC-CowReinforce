@@ -22,6 +22,9 @@ public class Gui {
     private static HashMap<Character, ItemStack> symbol;
     private static HashMap<Integer, ItemStack> qianghua;
 
+    private static int qiangbao_slot;
+    private static int xingyunfu_slot;
+
     public static void loadConfig() {
         File file = new File(CowReinforce.getinstance().getDataFolder(), "Gui.yml");
         if (!file.exists())
@@ -55,6 +58,11 @@ public class Gui {
             for (int o = 0; o < 9;o++) {
                 int n = x+o;
                 ItemStack i;
+                if(s.charAt(o) == 'n'){
+                    qiangbao_slot = n;
+                }else if(s.charAt(o) == 'l'){
+                    xingyunfu_slot = n;
+                }
                 if(symbol.containsKey(s.charAt(o))){
                     i = symbol.get(s.charAt(o));
                 }else{
@@ -113,5 +121,21 @@ public class Gui {
 
     public static void setQianghua(HashMap<Integer, ItemStack> qianghua) {
         Gui.qianghua = qianghua;
+    }
+
+    public static int getQiangbao_slot() {
+        return qiangbao_slot;
+    }
+
+    public static void setQiangbao_slot(int qiangbao_slot) {
+        Gui.qiangbao_slot = qiangbao_slot;
+    }
+
+    public static int getXingyunfu_slot() {
+        return xingyunfu_slot;
+    }
+
+    public static void setXingyunfu_slot(int xingyunfu_slot) {
+        Gui.xingyunfu_slot = xingyunfu_slot;
     }
 }

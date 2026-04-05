@@ -3,15 +3,20 @@ package cow.cowReinforce;
 import com.fileTool.*;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Cow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -26,7 +31,98 @@ public class ReinforceGuiEvent implements Listener {
         }
         Player p = (Player)e.getWhoClicked();
         ItemStack old = e.getClickedInventory().getItem(e.getSlot());
+        String item_reinforceType = Tool.getItemReinforceType(p);
         double gl = new Random().nextDouble()*100;
+        if(e.getSlot() == Gui.getQiangbao_slot()){
+            //强化保护石槽位
+            if(e.getClickedInventory().getItem(Gui.getQiangbao_slot()) != null &&e.getClickedInventory().getItem(Gui.getQiangbao_slot()).equals(Gui.getContent().get(Gui.getQiangbao_slot()))){
+                //里面没有放保护石
+                e.getClickedInventory().setItem(e.getSlot(),new ItemStack(Material.AIR));
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        if(e.getClickedInventory().getItem(e.getSlot()) == null){
+                            e.getClickedInventory().setItem(e.getSlot(),Gui.getContent().get(e.getSlot()));
+                        }
+                    }
+                }.runTaskLaterAsynchronously(CowReinforce.getinstance(),10);
+            }else{
+                //放置了
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        if(e.getClickedInventory().getItem(e.getSlot()) == null){
+                            e.getClickedInventory().setItem(e.getSlot(),Gui.getContent().get(e.getSlot()));
+                        }
+                    }
+                }.runTaskLaterAsynchronously(CowReinforce.getinstance(),10);
+            }
+            return;
+        }else if(e.getSlot() == Gui.getXingyunfu_slot()){
+            if(e.getClickedInventory().getItem(Gui.getXingyunfu_slot()) != null && e.getClickedInventory().getItem(Gui.getXingyunfu_slot()).hasItemMeta() && e.getClickedInventory().getItem(Gui.getXingyunfu_slot()).equals(Gui.getContent().get(Gui.getXingyunfu_slot()))){
+                //里面没放东西
+                e.getClickedInventory().setItem(e.getSlot(),new ItemStack(Material.AIR));
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        if(e.getClickedInventory().getItem(e.getSlot()) == null){
+                            e.getClickedInventory().setItem(e.getSlot(),Gui.getContent().get(e.getSlot()));
+                        }
+                    }
+                }.runTaskLaterAsynchronously(CowReinforce.getinstance(),10);
+            }else{
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        if(e.getClickedInventory().getItem(e.getSlot()) == null){
+                            e.getClickedInventory().setItem(e.getSlot(),Gui.getContent().get(e.getSlot()));
+                        }
+                    }
+                }.runTaskLaterAsynchronously(CowReinforce.getinstance(),10);
+            }
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    if(e.getClickedInventory().getItem(Gui.getXingyunfu_slot()) != null && !e.getClickedInventory().getItem(Gui.getXingyunfu_slot()).equals(Gui.getContent().get(Gui.getXingyunfu_slot()))) {
+                        String proptype =  ReinforceProps.getType(e.getClickedInventory().getItem(Gui.getXingyunfu_slot()),item_reinforceType);
+                        if(!(proptype.equals("无") || ReinforceProps.getType().get(proptype) != 1)){
+
+                            double more_upchance = ReinforceProps.getUpchance().get(proptype);
+                            for(int x : Gui.getQianghua().keySet()){
+                                ItemStack curItem = e.getClickedInventory().getItem(x);
+                                ItemMeta curim = curItem.getItemMeta();
+                                List<String> lores = curItem.getItemMeta().getLore();
+                                for(int j = 0;j<lores.size();j++){
+                                    if(lores.get(j).contains(Reinforce.getLuckstone_check().get(item_reinforceType))){
+                                        lores.set(j,lores.get(j) + " +" +more_upchance +"%");
+                                        break;
+                                    }
+                                }
+                                curim.setLore(lores);
+                                curItem.setItemMeta(curim);
+                                e.getClickedInventory().setItem(x,curItem);
+                            }
+                        }
+                    }else{
+                        for(int x : Gui.getQianghua().keySet()){
+                            ItemStack curItem = e.getClickedInventory().getItem(x);
+                            ItemMeta curim = curItem.getItemMeta();
+                            List<String> lores = curItem.getItemMeta().getLore();
+                            for(int j = 0;j<lores.size();j++){
+                                if(lores.get(j).contains(Reinforce.getLuckstone_check().get(item_reinforceType))){
+                                    lores.set(j,lores.get(j).replaceAll("\\s*\\+\\s*[\\d.]+%$", ""));
+                                    break;
+                                }
+                            }
+                            curim.setLore(lores);
+                            curItem.setItemMeta(curim);
+                            e.getClickedInventory().setItem(x,curItem);
+                        }
+                    }
+                }
+            }.runTaskLaterAsynchronously(CowReinforce.getinstance(),6);
+            return;
+        }
         for(int slot : Gui.getContent().keySet()){
             if(e.getSlot() == slot && Gui.getContent().get(slot).getType() == Material.AIR){
                return;
@@ -36,7 +132,7 @@ public class ReinforceGuiEvent implements Listener {
         int temp_level = Tool.getReinforceLevel(p);
         for(int slot : Gui.getQianghua().keySet()){
             if(slot == e.getSlot()){
-                if(CowReinforce.econ != null && CowReinforce.econ.getBalance(p) < Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p)).get(temp_level+1)){
+                if(CowReinforce.econ != null && CowReinforce.econ.getBalance(p) < Reinforce.getNeedMoney().get(item_reinforceType).get(temp_level+1)){
                     e.getClickedInventory().setItem(e.getSlot(),Gui.getSymbol().get('m'));
                     p.playSound(p.getLocation(), Sound.valueOf(CowReinforce.getinstance().getConfig().getString("Settings.Material.Sound.failure")),1,1);
                     new BukkitRunnable(){
@@ -47,7 +143,7 @@ public class ReinforceGuiEvent implements Listener {
                     }.runTaskLater(CowReinforce.getinstance(),CowReinforce.getinstance().getConfig().getLong("Settings.Material.time")*20);
                     return;
                 }
-                for(Map.Entry<ItemStack,Integer> entry : Reinforce.getNeeditem().get(Tool.getItemReinforceType(p)).entrySet()){
+                for(Map.Entry<ItemStack,Integer> entry : Reinforce.getNeeditem().get(item_reinforceType).entrySet()){
 
                     if(Tool.checkItem(entry.getKey(),p) < entry.getValue()){
                         e.getClickedInventory().setItem(e.getSlot(),Gui.getSymbol().get('f'));
@@ -61,28 +157,79 @@ public class ReinforceGuiEvent implements Listener {
                         return;
                     }
                 }
+                boolean has_protectiveStone = false;
+                if(e.getClickedInventory().getItem(Gui.getQiangbao_slot()) != null && !e.getClickedInventory().getItem(Gui.getQiangbao_slot()).equals(Gui.getContent().get(Gui.getQiangbao_slot()))){
+                    //检测强化保护石位置不为空
+                    String proptype =  ReinforceProps.getType(e.getClickedInventory().getItem(Gui.getQiangbao_slot()),item_reinforceType);
+                    if(proptype.equals("无") || ReinforceProps.getType().get(proptype) != 0){
+                        e.getClickedInventory().setItem(e.getSlot(),Gui.getSymbol().get('N'));
+                        p.playSound(p.getLocation(), Sound.valueOf(CowReinforce.getinstance().getConfig().getString("Settings.Material.Sound.failure")),1,1);
+                        new BukkitRunnable(){
+                            public void run(){
+                                e.getClickedInventory().setItem(e.getSlot(),old);
+                                cancel();
+                            }
+                        }.runTaskLater(CowReinforce.getinstance(),CowReinforce.getinstance().getConfig().getLong("Settings.Material.time")*20);
+                        return;
+                    }else{
+                        has_protectiveStone = true;
+                    }
+                }
+                double more_upchance = 0;
+                if(e.getClickedInventory().getItem(Gui.getXingyunfu_slot()) != null && !e.getClickedInventory().getItem(Gui.getXingyunfu_slot()).equals(Gui.getContent().get(Gui.getXingyunfu_slot()))){
+                    String proptype =  ReinforceProps.getType(e.getClickedInventory().getItem(Gui.getXingyunfu_slot()),item_reinforceType);
+                    if(proptype.equals("无") || ReinforceProps.getType().get(proptype) != 1){
+                        e.getClickedInventory().setItem(e.getSlot(),Gui.getSymbol().get('L'));
+                        p.playSound(p.getLocation(), Sound.valueOf(CowReinforce.getinstance().getConfig().getString("Settings.Material.Sound.failure")),1,1);
+                        new BukkitRunnable(){
+                            public void run(){
+                                e.getClickedInventory().setItem(e.getSlot(),old);
+                                cancel();
+                            }
+                        }.runTaskLater(CowReinforce.getinstance(),CowReinforce.getinstance().getConfig().getLong("Settings.Material.time")*20);
+                        return;
+                    }else{
+                        more_upchance = ReinforceProps.getUpchance().get(proptype);
+                    }
+                }
                 for(Map.Entry<ItemStack,Integer> entry : Reinforce.getNeeditem().get(Tool.getItemReinforceType(p)).entrySet()){
                     Tool.dItem(entry.getKey(),p,entry.getValue());
                 }
-                if(CowReinforce.econ != null)CowReinforce.econ.withdrawPlayer(p,Reinforce.getNeedMoney().get(Tool.getItemReinforceType(p)).get(temp_level+1));
-                double upchance = Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getUpchance().get(Tool.getItemReinforceType(p))) * 100;
-                double downchance = Tool.getchance(Tool.getReinforceLevel(p) + 1, Reinforce.getDownchance().get(Tool.getItemReinforceType(p))) * 100;
+                if(CowReinforce.econ != null)CowReinforce.econ.withdrawPlayer(p,Reinforce.getNeedMoney().get(item_reinforceType).get(temp_level+1));
+                double upchance = Tool.getchance(temp_level + 1, Reinforce.getUpchance().get(item_reinforceType)) * 100;
+                double downchance = Tool.getchance(temp_level + 1, Reinforce.getDownchance().get(item_reinforceType)) * 100;
 
-
-                if (gl > upchance) {
+                if(upchance >0){
+                    int amount = e.getClickedInventory().getItem(Gui.getXingyunfu_slot()).getAmount()-1;
+                    e.getClickedInventory().getItem(Gui.getXingyunfu_slot()).setAmount(amount);
+                    if(amount <=0){
+                        e.getClickedInventory().setItem(Gui.getXingyunfu_slot(),Gui.getContent().get(Gui.getXingyunfu_slot()));
+                    }
+                }
+                if (gl > upchance+more_upchance) {
                     p.playSound(p.getLocation(), Sound.valueOf(CowReinforce.getinstance().getConfig().getString("Settings.Material.Sound.failure")),1,1);
                     double dc = new Random().nextDouble()*100;
                     if(dc < downchance){
-                        Tool.getLastLevelItem(p,p.getInventory().getItemInMainHand(),Tool.getItemReinforceType(p));
-//                        e.getClickedInventory().setItem(e.getSlot(),Gui.getSymbol().get('o'));
-//                        new BukkitRunnable(){
-//                            public void run(){
-//                                e.getClickedInventory().setItem(e.getSlot(),old);
-//                                cancel();
-//                            }
-//                        }.runTaskLater(CowReinforce.getinstance(),CowReinforce.getinstance().getConfig().getLong("Settings.Material.time")*20);
-                        p.closeInventory();
-                        ReinforceGui.failureopen(p);
+                        //扣级
+                        if(has_protectiveStone){
+                           //检测有强化保护石
+                            e.getClickedInventory().setItem(e.getSlot(),Gui.getSymbol().get('W'));
+                            int amount = e.getClickedInventory().getItem(Gui.getQiangbao_slot()).getAmount()-1;
+                            e.getClickedInventory().getItem(Gui.getQiangbao_slot()).setAmount(amount);
+                            if(amount <=0){
+                                e.getClickedInventory().setItem(Gui.getQiangbao_slot(),Gui.getContent().get(Gui.getQiangbao_slot()));
+                            }
+                            new BukkitRunnable(){
+                                public void run(){
+                                    e.getClickedInventory().setItem(e.getSlot(),old);
+                                    cancel();
+                                }
+                            }.runTaskLater(CowReinforce.getinstance(),CowReinforce.getinstance().getConfig().getLong("Settings.Material.time")*20);
+                        }else{
+                            Tool.getLastLevelItem(p,p.getInventory().getItemInMainHand(),item_reinforceType);
+                            p.closeInventory();
+                            ReinforceGui.failureopen(p);
+                        }
                         return;
                     }
                     e.getClickedInventory().setItem(e.getSlot(),Gui.getSymbol().get('q'));
@@ -95,9 +242,8 @@ public class ReinforceGuiEvent implements Listener {
 
                     return;
                 }
-         //       ReinforceGui.loadReinforceGui(p);
                 p.playSound(p.getLocation(), Sound.valueOf(CowReinforce.getinstance().getConfig().getString("Settings.Material.Sound.success")),1,1);
-                Tool.getNextLevelItem(p,p.getInventory().getItemInMainHand(),Tool.getItemReinforceType(p));
+                Tool.getNextLevelItem(p,p.getInventory().getItemInMainHand(),item_reinforceType);
                 p.closeInventory();
                 ReinforceGui.open(p);
             }
@@ -109,6 +255,12 @@ public class ReinforceGuiEvent implements Listener {
             Player p = (Player)e.getPlayer();
             ReinforceGui.loadReinforceGui(p);
             boolean flag = false;
+            if(e.getInventory().getItem(Gui.getQiangbao_slot())!= null && !e.getInventory().getItem(Gui.getQiangbao_slot()).equals(Gui.getContent().get(Gui.getQiangbao_slot()))){
+                p.getInventory().addItem(e.getInventory().getItem(Gui.getQiangbao_slot()));
+            }
+            if(e.getInventory().getItem(Gui.getXingyunfu_slot()) !=null&& !e.getInventory().getItem(Gui.getXingyunfu_slot()).equals(Gui.getContent().get(Gui.getXingyunfu_slot()))){
+                p.getInventory().addItem(e.getInventory().getItem(Gui.getXingyunfu_slot()));
+            }
             for(int i =0;i<Gui.getSize();i++){
                 if( Gui.getContent().get(i).getType() == Material.AIR){
                     if(e.getInventory().getItem(i) != null){
@@ -129,7 +281,7 @@ public class ReinforceGuiEvent implements Listener {
         assert e.getClickedInventory() != null;
         if(e.getClickedInventory() == e.getWhoClicked().getInventory()){
             if(e.getWhoClicked().getOpenInventory().getTopInventory().getHolder() instanceof  ReinforceGui){
-                if(e.getCurrentItem().equals(e.getWhoClicked().getInventory().getItemInMainHand())){
+                if(e.getCurrentItem() != null && e.getCurrentItem().hasItemMeta() && e.getCurrentItem().equals(e.getWhoClicked().getInventory().getItemInMainHand())){
                     e.setCancelled(true);
                     return;
                 }
